@@ -8,16 +8,26 @@ MAINTAINER arunprasath33@gmail.com
 WORKDIR /install/
 RUN unzip OpenDJ-3.0.0-20151202.zip
 
-WORKDIR /install/opendj/
+ENV LDAP_PORT 1389
+ENV LDAPS_PORT 1636
+ENV ADMIN_CONN_PORT 4444
+ENV ROOT_USER_DN "cn=Directory Manager"
+ENV ROOT_USER_PASSWORD password 
+# I shouldn't be doing this; links; coreos blah blah
+ENV OPENDJ_DIR /install/opendj/
+
+
+WORKDIR $OPENDJ_DIR
 RUN ./setup --cli -v   \
-    --ldapPort 1389   \
-    --ldapsPort 1636  \
-    --adminConnectorPort 4444 \
+    --ldapPort $LDAP_PORT   \
+    --ldapsPort $LDAPS_PORT  \
+    --adminConnectorPort $ADMIN_CONN_PORT \
     --rootUserDN "cn=Directory Manager" \
-    --rootUserPassword password  \
+    --rootUserPassword $ROOT_USER_PASSWORD  \
     --generateSelfSignedCertificate   \
     --no-prompt --noPropertiesFile   \
     --doNotStart
+
 COPY RunOpenDJ /install/RunOpenDJ
 RUN chmod +x /install/RunOpenDJ
 ENV PATH /install/opendj/bin:$PATH
