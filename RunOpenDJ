@@ -1,0 +1,2 @@
+#!/bin/sh
+/install/opendj/bin/start-ds -N
